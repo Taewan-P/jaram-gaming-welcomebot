@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.discord_config
+
+# MacOS
+.DS_Store
