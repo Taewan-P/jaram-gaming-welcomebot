@@ -1,10 +1,11 @@
+#-*-coding: UTF-8 -*-
 import os, json
 import discord
 
 app = discord.Client()
 
 # Read Config JSON
-json_data = open(os.getcwd() + "/.discord_config").read()
+json_data = open(os.getcwd() + "/.discord_config", encoding='utf-8').read()
 config_json = json.loads(json_data)
 
 token = config_json["token"]
