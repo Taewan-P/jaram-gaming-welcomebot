@@ -3,6 +3,7 @@ import discord
 
 app = discord.Client()
 
+# Read Config JSON
 json_data = open(os.getcwd() + "/.discord_config").read()
 config_json = json.loads(json_data)
 
@@ -38,7 +39,7 @@ async def on_message(message):
     if message.content == "$link":
         embed4 = discord.Embed(title="자람 오픈채팅방 목록", description=chat_link, color=0xFF9900)
         embed4.set_footer(text=footer)
-        
+
         await message.channel.send(embed=embed4)
         await message.channel.send(administrator_id)
 
