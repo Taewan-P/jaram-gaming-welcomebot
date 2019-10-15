@@ -39,10 +39,7 @@ async def on_message(message):
         embed = discord.Embed(title="명령어 목록", description="$help - 봇 도움말 불러오기 \n$link - 자람 오픈채팅방 링크 목록 불러오기\n\n다른기능은 추후 추가예정.", color=0x6FA8DC)
         embed.set_footer(text=footer)
 
-        embed2 = discord.Embed(title="To contribute", description="기능을 추가하려면 클릭하세요", url="https://github.com/Taewan-P/jaram-gaming-welcomebot/", color=0x6FA8DC)
-        embed2.set_footer(text=footer)
         await message.channel.send(embed=embed)
-        await message.channel.send(embed=embed2)
 
     if message.content == "$link":
         embed4 = discord.Embed(title="자람 오픈채팅방 목록", description=chat_link, color=0xFF9900)
@@ -70,6 +67,12 @@ async def on_message(message):
                 await message.channel.send(administrator_id)
             elif str(reaction.emoji) == "\u274c":
                 await message.channel.send("싫음 말구.")
+
+    if message.content == "$contribute":
+        embed2 = discord.Embed(title="To contribute", description="기능을 추가는 언제든지 환영입니다~", url="https://github.com/Taewan-P/jaram-gaming-welcomebot/", color=0x6FA8DC)
+        embed2.set_footer(text=footer)
+
+        await message.channel.send(embed=embed2)
 
 
 @app.event
