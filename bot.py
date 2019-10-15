@@ -1,6 +1,6 @@
 #-*-coding: UTF-8 -*-
 import os, json
-import discord
+import discord, asyncio
 
 app = discord.Client()
 
@@ -13,6 +13,7 @@ text_channel_general = config_json["text_channel_general"]
 footer = config_json["footer"]
 chat_link = config_json["chat_link"]
 administrator_id = config_json["administrator"]
+mstatus = 0
 
 @app.event
 async def on_ready():
@@ -25,8 +26,14 @@ async def on_ready():
 
 @app.event
 async def on_message(message):
+    global mstatus
     if message.author.bot:
-        return None
+        if mstatus == 1:
+            await message.add_reaction("\u2b55") # O
+            await message.add_reaction("\u274c") # X
+            mstatus = mstatus - 1
+        else:
+            return None
 
     if message.content == "$help":
         embed = discord.Embed(title="명령어 목록", description="$help - 봇 도움말 불러오기 \n$link - 자람 오픈채팅방 링크 목록 불러오기\n\n다른기능은 추후 추가예정.", color=0x6FA8DC)
@@ -42,7 +49,28 @@ async def on_message(message):
         embed4.set_footer(text=footer)
 
         await message.channel.send(embed=embed4)
-        await message.channel.send(administrator_id)
+
+    if message.content == "$admin":
+        mstatus = mstatus + 1
+        embed5 = discord.Embed(title="관리자를 호출하시겠습니까?", description="관리자를 호출하실려면 :o:, 아니면 :x:를 눌러주세요.", color=0xFFD966)
+        embed5.set_footer(text=footer)
+        
+        await message.channel.send(embed=embed5)
+
+        def check(reaction, user):
+            return user == message.author and (str(reaction.emoji) == "\u2b55" or str(reaction.emoji) == "\u274c")
+
+        try:
+            reaction, user = await app.wait_for('reaction_add', timeout=10.0, check=check)
+        except asyncio.TimeoutError:
+            await message.channel.send("시간초과!")
+
+        else:
+            if str(reaction.emoji) == "\u2b55":
+                await message.channel.send(administrator_id)
+            elif str(reaction.emoji) == "\u274c":
+                await message.channel.send("싫음 말구.")
+
 
 @app.event
 async def on_member_join(member):
