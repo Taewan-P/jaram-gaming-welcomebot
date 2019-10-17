@@ -5,7 +5,7 @@ import discord, asyncio
 app = discord.Client()
 
 # Read Config JSON
-json_data = open(os.getcwd() + "/.discord_config", encoding='utf-8').read()
+json_data = open(os.getcwd() + "/jaram-bot-token/.discord_config", encoding='utf-8').read()
 config_json = json.loads(json_data)
 
 token = config_json["token"]
