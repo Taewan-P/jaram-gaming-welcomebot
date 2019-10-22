@@ -52,7 +52,6 @@ async def on_message(message):
     if message.content == "$admin":
         mstatus = mstatus + 1
         embed5 = discord.Embed(title="관리자를 호출하시겠습니까?", description="관리자를 호출하실려면 :o:, 아니면 :x:를 눌러주세요.", color=0xFFD966)
-        
         embed5.set_footer(text=footer, icon_url=github_icon)
 
         await message.channel.send(embed=embed5)
