@@ -1,6 +1,9 @@
 #-*-coding: UTF-8 -*-
-import os, json
+import os, json, re
 import discord, asyncio
+
+from bs4 import BeautifulSoup
+from urllib.request import Request, urlopen
 
 app = discord.Client()
 
@@ -76,6 +79,38 @@ async def on_message(message):
 
         await message.channel.send(embed=embed2)
 
+    if message.content == "$owsearch":
+        embed6 = discord.Embed(title="Overwatch 점수 검색", description="'배틀태그#숫자' 형식으로 입력해주세요.", color=0x82CC62)
+        embed6.set_footer(text=footer, icon_url=github_icon)
+
+        await message.channel.send(embed=embed6)
+
+        def check(m):
+            return m.author == message.author and m.channel == message.channel
+
+        try:    
+            m = await app.wait_for('message',timeout=25.0, check=check)
+        except asyncio.TimeoutError:
+            await message.channel.send("시간초과!")
+        else:
+            battletag_bool = bool(re.search('.[#][0-9]', m.content))
+            if battletag_bool:
+                battletag = m.content.replace("#", "-")
+                req = Request("https://playoverwatch.com/ko-kr/career/pc/" + battletag)
+                res = urlopen(req)
+
+                bs = BeautifulSoup(res, "html.parser")
+                scores = bs.findAll("div", attrs={"class": "competitive-rank-level"})
+
+                competitive_score = [i.text for i in scores[:3]]
+                if not competitive_score:
+                    await message.channel.send("비공개 프로필 또는 존재하지 않습니다. 배틀태그와 뒤에 숫자를 다시 확인해 주세요.")
+                else:
+                    await message.channel.send("돌격 : " + competitive_score[0] + "\n공격 : " + competitive_score[1] + "\n지원 : " + competitive_score[2])
+
+            else:
+                # Invalid
+                await message.channel.send("Invalid BattleTag!!!!")
 
 @app.event
 async def on_member_join(member):
