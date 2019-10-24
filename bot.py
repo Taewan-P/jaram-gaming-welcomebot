@@ -4,6 +4,7 @@ import discord, asyncio
 
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
+from urllib import parse
 
 app = discord.Client()
 
@@ -96,7 +97,7 @@ async def on_message(message):
             battletag_bool = bool(re.search('.[#][0-9]', m.content))
             if battletag_bool:
                 battletag = m.content.replace("#", "-")
-                req = Request("https://playoverwatch.com/ko-kr/career/pc/" + battletag)
+                req = Request("https://playoverwatch.com/ko-kr/career/pc/" + parse.quote(battletag))
                 res = urlopen(req)
 
                 bs = BeautifulSoup(res, "html.parser")
