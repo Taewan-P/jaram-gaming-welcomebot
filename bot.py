@@ -83,6 +83,7 @@ async def on_message(message):
     if message.content == "$owsearch":
         embed6 = discord.Embed(title="Overwatch 점수 검색", description="'배틀태그#숫자' 형식으로 입력해주세요.", color=0x82CC62)
         embed6.set_footer(text=footer, icon_url=github_icon)
+        embed6.set_image(url="https://bnetcmsus-a.akamaihd.net/cms/blog_header/q4/Q4K237E1EGPI1467079634956.jpg")
 
         await message.channel.send(embed=embed6)
 
