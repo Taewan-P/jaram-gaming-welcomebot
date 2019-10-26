@@ -101,13 +101,49 @@ async def on_message(message):
                 res = urlopen(req)
 
                 bs = BeautifulSoup(res, "html.parser")
+                roles = bs.findAll("div", attrs={"class": "competitive-rank-tier"})
                 scores = bs.findAll("div", attrs={"class": "competitive-rank-level"})
 
-                competitive_score = [i.text for i in scores[:3]]
+                competitive_roles = [i.get("data-ow-tooltip-text") for i in roles[:len(roles)//2]]
+                competitive_score = [i.text for i in scores[:len(scores)//2]]
+                competitive_score_pretty = []
+
+                # B S G P D M GM UKN
+                def tier_status(r):
+                    return {"B": "<:overwatch_bronze:637619081410772992> ", "S": "<:overwatch_silver:637619187115753496> ", "G": "<:overwatch_gold:637619348910899250> ", "P": "<:overwatch_platinum:637619477030109195> ", "D": "<:overwatch_diamond:637619833995001866> ", "M": "<:overwatch_master:637619988965883904> ", "GM": "<:overwatch_grandmaster:637620080070623244> ", "UKN": ":question: "}.get(r, ":question: ")
+
+                for a in competitive_score:
+                    try:    
+                        if int(a) < 1500:
+                            competitive_score_pretty.append(tier_status("B") + a)
+                        elif int(a) > 1500 and int(a) < 2000:
+                            competitive_score_pretty.append(tier_status("S") + a)
+                        elif int(a) > 2000 and int(a) < 2500:
+                            competitive_score_pretty.append(tier_status("G") + a)
+                        elif int(a) > 2500 and int(a) < 3000:
+                            competitive_score_pretty.append(tier_status("P") + a)
+                        elif int(a) > 3000 and int(a) < 3500:
+                            competitive_score_pretty.append(tier_status("D") + a)
+                        elif int(a) > 3500 and int(a) < 4000:
+                            competitive_score_pretty.append(tier_status("M") + a)
+                        elif int(a) > 4000 and int(a) < 5000:
+                            competitive_score_pretty.append(tier_status("GM") + a)
+                        else:
+                            competitive_score_pretty.append(tier_status("B") + a)
+                    except ValueError:
+                        competitive_score_pretty.append(tier_status("B") + a)
+
                 if not competitive_score:
                     await message.channel.send("비공개 프로필 또는 존재하지 않습니다. 배틀태그와 뒤에 숫자를 다시 확인해 주세요.")
                 else:
-                    await message.channel.send("돌격 : " + competitive_score[0] + "\n공격 : " + competitive_score[1] + "\n지원 : " + competitive_score[2])
+                    score_result = ""
+                    for i in range(len(competitive_roles)):
+                        score_result = score_result + competitive_roles[i] + " : " + competitive_score_pretty[i] + "\n"
+                    score_result = score_result + "입니다."
+                    embed7 = discord.Embed(title="현재 시즌 경쟁전 점수", description=score_result, color=0x82CC62)
+                    embed7.set_footer(text=footer, icon_url=github_icon)
+
+                    await message.channel.send(embed=embed7)
 
             else:
                 # Invalid
