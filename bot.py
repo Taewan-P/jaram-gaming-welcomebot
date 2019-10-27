@@ -104,6 +104,7 @@ async def on_message(message):
                 bs = BeautifulSoup(res, "html.parser")
                 roles = bs.findAll("div", attrs={"class": "competitive-rank-tier"})
                 scores = bs.findAll("div", attrs={"class": "competitive-rank-level"})
+                public_status = bs.findAll("p", attrs={"class": "masthead-permission-level-text"})
 
                 competitive_roles = [i.get("data-ow-tooltip-text") for i in roles[:len(roles)//2]]
                 competitive_score = [i.text for i in scores[:len(scores)//2]]
@@ -134,17 +135,24 @@ async def on_message(message):
                     except ValueError:
                         competitive_score_pretty.append(tier_status("B") + a)
 
-                if not competitive_score:
-                    await message.channel.send("비공개 프로필 또는 존재하지 않습니다. 배틀태그와 뒤에 숫자를 다시 확인해 주세요.")
+                if not public_status:
+                    await message.channel.send("프로필이 존재하지 않습니다. 배틀태그와 뒤에 숫자를 다시 확인해 주세요.")
                 else:
-                    score_result = ""
-                    for i in range(len(competitive_roles)):
-                        score_result = score_result + competitive_roles[i] + " : " + competitive_score_pretty[i] + "\n"
-                    score_result = score_result + "입니다."
-                    embed7 = discord.Embed(title="현재 시즌 경쟁전 점수", description=score_result, color=0x82CC62)
-                    embed7.set_footer(text=footer, icon_url=github_icon)
+                    if public_status[0].text == "비공개 프로필":
+                        await message.channel.send("비공개 프로필입니다. 프로필 공개 설정을 공개로 바꾼 뒤에 사용해 주세요.")
+                    else:
+                        score_result = ""
+                        if len(competitive_roles) == 0 and len(competitive_score) == 0:
+                            score_result = "아직 배치를 덜본것 같군요! 점수가 없습니다."
+                        else:
+                            for i in range(len(competitive_roles)):
+                                score_result = score_result + competitive_roles[i] + " : " + competitive_score_pretty[i] + "\n"
+                            score_result = score_result + "입니다."
 
-                    await message.channel.send(embed=embed7)
+                        embed7 = discord.Embed(title=battletag.split("-")[0] + " 님의 현재 시즌 경쟁전 점수", description=score_result, color=0x82CC62)
+                        embed7.set_footer(text=footer, icon_url=github_icon)
+
+                        await message.channel.send(embed=embed7)
 
             else:
                 # Invalid
