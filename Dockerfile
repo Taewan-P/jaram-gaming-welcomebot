@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3
 
 RUN mkdir -p /usr/src/jaram-gaming-welcomebot
 WORKDIR /usr/src/jaram-gaming-welcomebot
