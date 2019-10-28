@@ -98,13 +98,14 @@ async def on_message(message):
             battletag_bool = bool(re.search('.[#][0-9]', m.content))
             if battletag_bool:
                 battletag = m.content.replace("#", "-")
-                req = Request("https://playoverwatch.com/ko-kr/career/pc/" + parse.quote(battletag))
-                res = urlopen(req)
+                async with message.channel.typing():
+                    req = Request("https://playoverwatch.com/ko-kr/career/pc/" + parse.quote(battletag))
+                    res = urlopen(req)
 
-                bs = BeautifulSoup(res, "html.parser")
-                roles = bs.findAll("div", attrs={"class": "competitive-rank-tier"})
-                scores = bs.findAll("div", attrs={"class": "competitive-rank-level"})
-                public_status = bs.findAll("p", attrs={"class": "masthead-permission-level-text"})
+                    bs = BeautifulSoup(res, "html.parser")
+                    roles = bs.findAll("div", attrs={"class": "competitive-rank-tier"})
+                    scores = bs.findAll("div", attrs={"class": "competitive-rank-level"})
+                    public_status = bs.findAll("p", attrs={"class": "masthead-permission-level-text"})
 
                 competitive_roles = [i.get("data-ow-tooltip-text") for i in roles[:len(roles)//2]]
                 competitive_score = [i.text for i in scores[:len(scores)//2]]
