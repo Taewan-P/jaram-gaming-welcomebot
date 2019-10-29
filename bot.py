@@ -42,7 +42,7 @@ async def on_message(message):
             return None
 
     if message.content == "$help":
-        embed = discord.Embed(title="명령어 목록", description="$help - 봇 도움말 불러오기 \n$link - 자람 오픈채팅방 링크 목록 불러오기\n$contribute - 자람봇에 기여하기(링크)\n$admin - 관리자 소환하기(기술적 문제나 문의사항 처리)\n$owsearch - 오버워치 전적 검색\n\n*다른기능은 추후 추가예정.*", color=0x6FA8DC)
+        embed = discord.Embed(title="명령어 목록", description="$help - 봇 도움말 불러오기 \n$link - 자람 오픈채팅방 링크 목록 불러오기\n$contribute - 자람봇에 기여하기(링크)\n$admin - 관리자 소환하기(기술적 문제나 문의사항 처리)\n$owsearch - 오버워치 전적 검색\n$team.split - 팀 분배 기능!! (1,2팀으로 분할가능)\n\n*다른기능은 추후 추가예정.*", color=0x6FA8DC)
         embed.set_footer(text=footer, icon_url=github_icon)
 
         await message.channel.send(embed=embed)
