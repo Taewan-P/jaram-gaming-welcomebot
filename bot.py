@@ -1,5 +1,5 @@
 #-*-coding: UTF-8 -*-
-import os, json, re
+import os, json, re, random
 import discord, asyncio
 
 from bs4 import BeautifulSoup
@@ -158,6 +158,95 @@ async def on_message(message):
             else:
                 # Invalid
                 await message.channel.send("Invalid BattleTag!!!!")
+
+    if message.content == "$team.split":
+        # Check if the user is in a voice channel
+        if message.author.voice is None:
+            await message.channel.send("이 기능을 사용하려면 보이스 채널에 들어가 있어야 합니다!")
+        else:
+            member_list = message.author.voice.channel.members
+            member_list_name = [i.name + "#" + i.discriminator + "-" + str(i.id) for i in member_list if not i.bot]
+
+            num = 1
+            member_list_str = "제외할 인원이 없으면 0 을 입력해 주세요.\n\n"
+            for s in member_list_name:
+                member_list_str = member_list_str + str(num) + ". " + s.split("-")[0] + "\n"
+                num = num + 1
+            embed8 = discord.Embed(title="팀 분배에서 제외할 인원의 번호를 입력하세요. (여러명 선택 불가능 ㅠ, 자연수만 입력할것.)", description=member_list_str, color=0x6FA8DC)
+            embed8.set_footer(text=footer, icon_url=github_icon)
+
+            await message.channel.send(embed=embed8)
+
+            def check(m):
+                return m.author == message.author and m.channel == message.channel
+
+            try:    
+                m = await app.wait_for('message',timeout=25.0, check=check)
+            except asyncio.TimeoutError:
+                await message.channel.send("시간초과!")
+            else:
+                number_bool = bool(re.search('[1-9]\d*', m.content))
+                if number_bool:
+                    if int(m.content) > len(member_list_name):
+                        await message.channel.send("그런 번호를 가진 사람은 없다네. 처음부터 다시 하도록.")
+                    else:
+                        async with message.channel.typing():
+                            pop_num = int(m.content)
+                            member_list_name.pop(pop_num-1)
+                            random.shuffle(member_list_name)
+                            team_a = member_list_name[:len(member_list_name)//2]
+                            team_b = member_list_name[len(member_list_name)//2:]
+
+                            num = 1
+                            team_a_str = ""
+                            team_b_str = ""
+
+                            for a in team_a:
+                                team_a_str = team_a_str + str(num) + ". " + a.split("-")[0] + "\n"
+                                num = num + 1
+
+                            num = 1
+                            for b in team_b:
+                                team_b_str = team_b_str + str(num) + ". " + b.split("-")[0] + "\n"
+                                num = num + 1
+
+                        embed9 = discord.Embed(title="A팀", description=team_a_str, color=0x6FA8DC)
+                        embed10 = discord.Embed(title="B팀", description=team_b_str, color=0x6FA8DC)
+                        embed9.set_footer(text=footer, icon_url=github_icon)
+                        embed10.set_footer(text=footer, icon_url=github_icon)
+
+                        await message.channel.send(embed=embed9)
+                        await message.channel.send(embed=embed10)
+
+                elif m.content == "0":
+                    async with message.channel.typing():
+                        random.shuffle(member_list_name)
+                        team_a = member_list_name[:len(member_list_name)//2]
+                        team_b = member_list_name[len(member_list_name)//2:]
+
+                        num = 1
+                        team_a_str = ""
+                        team_b_str = ""
+
+                        for a in team_a:
+                            team_a_str = team_a_str + str(num) + ". " + a.split("-")[0] + "\n"
+                            num = num + 1
+
+                        num = 1
+                        for b in team_b:
+                            team_b_str = team_b_str + str(num) + ". " + b.split("-")[0] + "\n"
+                            num = num + 1
+
+                    embed9 = discord.Embed(title="A팀", description=team_a_str, color=0x6FA8DC)
+                    embed10 = discord.Embed(title="B팀", description=team_b_str, color=0x6FA8DC)
+                    embed9.set_footer(text=footer, icon_url=github_icon)
+                    embed10.set_footer(text=footer, icon_url=github_icon)
+
+                    await message.channel.send(embed=embed9)
+                    await message.channel.send(embed=embed10)
+
+                else:
+                    await message.channel.send("자연수를 입력하라고")
 
 @app.event
 async def on_member_join(member):
