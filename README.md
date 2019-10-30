@@ -1,5 +1,6 @@
 # Jaram Gaming Bot
 
+
 **Jaram is a computer science circle in Hanyang University. [Circle Link](https://jaram.net)**
 
 We do various activities with each other such as Membership Training, workshops, and also games!
@@ -35,3 +36,6 @@ In order to be efficient in managing the discord server, I decided to put in a b
 ### Screenshots
 
 Will be adding soon.
+
+### Translation
+- [ko](i18n/README.ko.md)
