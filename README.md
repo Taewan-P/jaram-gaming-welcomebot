@@ -1,6 +1,6 @@
 # Jaram Gaming Bot
 
-
+[![Jenkins](https://img.shields.io/jenkins/build/http/server.jaram.net:5903/Discord-Hellobot)](http://server.jaram.net:5903/job/Discord-Hellobot/) ![Discord](https://img.shields.io/discord/428153991730561044?color=%237289DA) ![GitHub](https://img.shields.io/github/license/Taewan-P/jaram-gaming-welcomebot?color=orange) ![python](https://img.shields.io/badge/language-python3-%23306998) ![docker](https://img.shields.io/badge/deploy-docker-0db7ed)
 **Jaram is a computer science circle in Hanyang University. [Circle Link](https://jaram.net)**
 
 We do various activities with each other such as Membership Training, workshops, and also games!
