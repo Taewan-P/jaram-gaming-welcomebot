@@ -75,7 +75,7 @@ async def on_message(message):
                 await message.channel.send("싫음 말구.")
 
     if message.content == "$contribute":
-        embed2 = discord.Embed(title="To contribute", description="기능을 추가는 언제든지 환영입니다~", url="https://github.com/Taewan-P/jaram-gaming-welcomebot/", color=0x6FA8DC)
+        embed2 = discord.Embed(title="To contribute", description="기능 추가는 언제든지 환영입니다~", url="https://github.com/Taewan-P/jaram-gaming-welcomebot/", color=0x6FA8DC)
         embed2.set_footer(text=footer, icon_url=github_icon)
 
         await message.channel.send(embed=embed2)
