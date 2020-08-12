@@ -20,20 +20,23 @@ administrator_id = config_json["administrator"]
 github_icon = config_json["github_icon"]
 
 mstatus = 0
+botid = ""
 
 @app.event
 async def on_ready():
+    global botid
     print('Logged in as')
     print(app.user.name)
     print(app.user.id)
     print('------')
     game = discord.Game("Jaram bot | $help")
+    botid = await app.application_info()
     await app.change_presence(status=discord.Status.online, activity=game)
 
 @app.event
 async def on_message(message):
-    global mstatus
-    if message.author.bot:
+    global mstatus, botid
+    if message.author.bot and message.author.id == botid.id:
         if mstatus == 1:
             await message.add_reaction("\u2b55") # O
             await message.add_reaction("\u274c") # X
