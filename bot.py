@@ -251,6 +251,35 @@ async def on_message(message):
                 else:
                     await message.channel.send("자연수를 입력하라고")
 
+    if message.content == "$muteall":
+        if message.author.voice is None:
+            await message.channel.send("이 기능을 사용하려면 보이스 채널에 들어가 있어야 합니다!")
+        else:
+            mstatus = mstatus + 1
+            embed = discord.Embed(title="Among Us 전용 전체 음소거 기능", description="현재 음성채널에 있는 모든 사용자를 음소거하겠습니까? \n원하시면 :o:, 아니면 :x:를 눌러주세요.", color=0xFFD966)
+
+            await message.channel.send(embed=embed)
+
+            def check(reaction, user):
+                return user == message.author and (str(reaction.emoji) == "\u2b55" or str(reaction.emoji) == "\u274c")
+
+            try:
+                reaction, user = await app.wait_for('reaction_add', timeout=10.0, check=check)
+            except asyncio.TimeoutError:
+                await message.channel.send("시간초과!")
+
+            else:
+                if str(reaction.emoji) == "\u2b55":
+                    # await message.channel.send(administrator_id)
+                    member_list = message.author.voice.channel.members
+                    async with message.channel.typing():
+                        for member in member_list:
+                            await member.edit(mute=True, reason="Among Us Player Mute All")
+
+                    await message.channel.send("음소거 완료!")
+
+                elif str(reaction.emoji) == "\u274c":
+                    await message.channel.send("싫음 소환하지를 마. 귀찮게.")
 @app.event
 async def on_member_join(member):
     channel = member.guild.get_channel(text_channel_general)
